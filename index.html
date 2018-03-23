@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Parcel Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <canvas id='fw-canvas' width="1000" height="1000" style="width: 50%; background-color: blue;"></canvas>
+    
+    <script src="./main.js"></script>
+    <script>
+        var stop = false;
+        var obj;
+        document.addEventListener("DOMContentLoaded", function(event) {
+            obj = fw.object.Rectangle({
+                position: {
+                    x: 100,
+                    y: 100
+                },
+                size: {
+                    w: 20,
+                    h: 20
+                },
+                speed: {
+                    x: 1,
+                    y: 1,
+                    velocity: .1
+                },
+                color: {
+                    fill: '#ff0000'
+                }
+            })
+
+            function update(elapsedTime) {
+                obj.update(elapsedTime);
+            }
+
+            function render() {
+                fw.graphics.clear();
+                obj.render();
+            }
+
+            var lastTimeStamp = 0;
+            function gameLoop(time) {
+                
+                update(time - lastTimeStamp);
+                lastTimeStamp = time;
+                
+                render();
+
+                if(!stop) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+
+            gameLoop(0);
+        });
+    </script>
+</body>
+</html>
