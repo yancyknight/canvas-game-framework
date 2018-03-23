@@ -82,13 +82,14 @@ let behaviors = {
         */
         x = 0,
         y = 0,
+        name = 'speed',
         angle,
         velocity
     } = {}) {
         if(typeof x !== 'number') throw 'Speed: x must be a number';
         if(typeof y !== 'number') throw 'Speed: y must be a number';
         return {
-            name: 'speed',
+            name,
             x,
             y,
             angle,
