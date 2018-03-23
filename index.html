@@ -11,52 +11,52 @@
     
     <script src="./main.js"></script>
     <script>
-        var stop = false;
-        var obj;
-        document.addEventListener("DOMContentLoaded", function(event) {
-            obj = fw.object.Rectangle({
-                position: {
-                    x: 100,
-                    y: 100
-                },
-                size: {
-                    w: 20,
-                    h: 20
-                },
-                speed: {
-                    x: 1,
-                    y: 1,
-                    velocity: .1
-                },
-                color: {
-                    fill: '#ff0000'
-                }
-            })
+        // var stop = false;
+        // var obj;
+        // document.addEventListener("DOMContentLoaded", function(event) {
+        //     obj = fw.object.Rectangle({
+        //         position: {
+        //             x: 100,
+        //             y: 100
+        //         },
+        //         size: {
+        //             w: 20,
+        //             h: 20
+        //         },
+        //         speed: {
+        //             x: 1,
+        //             y: 1,
+        //             velocity: .1
+        //         },
+        //         color: {
+        //             fill: '#ff0000'
+        //         }
+        //     })
 
-            function update(elapsedTime) {
-                obj.update(elapsedTime);
-            }
+        //     function update(elapsedTime) {
+        //         obj.update(elapsedTime);
+        //     }
 
-            function render() {
-                fw.graphics.clear();
-                obj.render();
-            }
+        //     function render() {
+        //         fw.graphics.clear();
+        //         obj.render();
+        //     }
 
-            var lastTimeStamp = 0;
-            function gameLoop(time) {
+        //     var lastTimeStamp = 0;
+        //     function gameLoop(time) {
                 
-                update(time - lastTimeStamp);
-                lastTimeStamp = time;
+        //         update(time - lastTimeStamp);
+        //         lastTimeStamp = time;
                 
-                render();
+        //         render();
 
-                if(!stop) {
-                    requestAnimationFrame(gameLoop);
-                }
-            }
+        //         if(!stop) {
+        //             requestAnimationFrame(gameLoop);
+        //         }
+        //     }
 
-            gameLoop(0);
-        });
+        //     gameLoop(0);
+        // });
     </script>
 </body>
 </html>
