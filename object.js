@@ -11,8 +11,10 @@ function GameObject({
     } = {},
 } = {}) {
     let that = {
-        position: { x, y },
-        size: { w, h }
+        behaviors: {
+            position: { x, y },
+            size: { w, h }
+        }
     };
     let updateList = [];
     let renderList = [];
@@ -33,7 +35,7 @@ function GameObject({
             delete data.render;
         }
 
-        that[name] = data;
+        that.behaviors[name] = data;
     }
 
     that.update = function(elapsedTime) {
@@ -94,19 +96,20 @@ let behaviors = {
             velocity,
             update(elapsedTime, obj) {
                 if(typeof elapsedTime === 'undefined') throw 'Speed.update needs an elapsed time';
+                var b = obj.behaviors;
         
-                if(typeof obj.speed.angle === 'number' && typeof obj.speed.velocity === 'number') {
-                    obj.position.x += Math.cos(obj.speed.angle) * obj.speed.velocity * elapsedTime;
-                    obj.position.y += Math.sin(obj.speed.angle) * obj.speed.velocity * elapsedTime;
-                } else if (typeof obj.speed.velocity === 'number') {;
-                    let mag = Math.sqrt(obj.speed.x * obj.speed.x + obj.speed.y * obj.speed.y);
-                    let ux = obj.speed.x / mag;
-                    let uy = obj.speed.y / mag;
-                    obj.position.x += ux * obj.speed.velocity * elapsedTime;
-                    obj.position.y += uy * obj.speed.velocity * elapsedTime;
+                if(typeof b.speed.angle === 'number' && typeof b.speed.velocity === 'number') {
+                    b.position.x += Math.cos(b.speed.angle) * b.speed.velocity * elapsedTime;
+                    b.position.y += Math.sin(b.speed.angle) * b.speed.velocity * elapsedTime;
+                } else if (typeof b.speed.velocity === 'number') {;
+                    let mag = Math.sqrt(b.speed.x * b.speed.x + b.speed.y * b.speed.y);
+                    let ux = b.speed.x / mag;
+                    let uy = b.speed.y / mag;
+                    b.position.x += ux * b.speed.velocity * elapsedTime;
+                    b.position.y += uy * b.speed.velocity * elapsedTime;
                 } else {
-                    obj.position.x += obj.speed.x * elapsedTime;
-                    obj.position.y += obj.speed.y * elapsedTime;
+                    b.position.x += b.speed.x * elapsedTime;
+                    b.position.y += b.speed.y * elapsedTime;
                 }
             }
         };
