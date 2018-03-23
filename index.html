@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Parcel Test</title>
+    <title>Simple Health Bar Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
@@ -11,6 +11,7 @@
     
     <script src="./main.js"></script>
     <script>
+        // You can change this in the dev tools to stop the game loop
         var stop = false;
         var obj;
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -37,9 +38,11 @@
                 y: .05,
             }));
 
-            // Render the 'player' rectangle
+            // Render the 'player' rectangle with a custom behavior
             obj.addBehavior({
                 name: 'rectangle',
+                // obj.render() will call this render function, passing in obj as the first argument
+                // I am destructuring that obj parameter to get just the parts I care about
                 render({
                     behaviors: {
                         position: { x, y },
@@ -83,6 +86,9 @@
 
             function render() {
                 fw.graphics.clear();
+
+                // Automatically renders both the player rectangle and the health bar
+                // And any other behavior on obj with a render function
                 obj.render();
             }
 
