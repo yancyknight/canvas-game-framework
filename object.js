@@ -94,15 +94,15 @@ let behaviors = {
             update(elapsedTime, obj) {
                 if(typeof elapsedTime === 'undefined') throw 'Speed.update needs an elapsed time';
         
-                if(typeof obj.angle === 'number' && typeof obj.velocity === 'number') {
-                    obj.position.x += Math.cos(obj.angle) * obj.velocity * elapsedTime;
-                    obj.position.y += Math.sin(obj.angle) * obj.velocity * elapsedTime;
-                } else if (typeof obj.velocity === 'number') {;
+                if(typeof obj.speed.angle === 'number' && typeof obj.speed.velocity === 'number') {
+                    obj.position.x += Math.cos(obj.speed.angle) * obj.speed.velocity * elapsedTime;
+                    obj.position.y += Math.sin(obj.speed.angle) * obj.speed.velocity * elapsedTime;
+                } else if (typeof obj.speed.velocity === 'number') {;
                     let mag = Math.sqrt(obj.speed.x * obj.speed.x + obj.speed.y * obj.speed.y);
                     let ux = obj.speed.x / mag;
                     let uy = obj.speed.y / mag;
-                    obj.position.x += ux * obj.velocity * elapsedTime;
-                    obj.position.y += uy * obj.velocity * elapsedTime;
+                    obj.position.x += ux * obj.speed.velocity * elapsedTime;
+                    obj.position.y += uy * obj.speed.velocity * elapsedTime;
                 } else {
                     obj.position.x += obj.speed.x * elapsedTime;
                     obj.position.y += obj.speed.y * elapsedTime;
@@ -118,12 +118,6 @@ var size = {w: 100, h: 100};
 var obj = fw.object.GameObject({position, size});
 var s = {x: .1, y: 0};
 obj.addBehavior(fw.object.behaviors.Speed(s));
-obj.speed.setAngle(5);
-
-
-
-
-
 */
 
 
