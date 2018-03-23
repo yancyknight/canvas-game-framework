@@ -19,6 +19,14 @@ function GameObject({
     let updateList = [];
     let renderList = [];
 
+    that.getUpdateList = function() {
+        return updateList;
+    }
+
+    that.getRenderList = function() {
+        return renderList;
+    }
+
     that.addBehavior = function(data) {
         if(typeof data !== 'object') throw 'GameObject.addBehavior: data is required and must be an object'
         if(typeof data.name !== 'string') throw 'GameObject.addBehavior: data.name is required and must be a string'
@@ -98,32 +106,23 @@ let behaviors = {
                 if(typeof elapsedTime === 'undefined') throw 'Speed.update needs an elapsed time';
                 var b = obj.behaviors;
         
-                if(typeof b.speed.angle === 'number' && typeof b.speed.velocity === 'number') {
-                    b.position.x += Math.cos(b.speed.angle) * b.speed.velocity * elapsedTime;
-                    b.position.y += Math.sin(b.speed.angle) * b.speed.velocity * elapsedTime;
-                } else if (typeof b.speed.velocity === 'number') {;
-                    let mag = Math.sqrt(b.speed.x * b.speed.x + b.speed.y * b.speed.y);
-                    let ux = b.speed.x / mag;
-                    let uy = b.speed.y / mag;
-                    b.position.x += ux * b.speed.velocity * elapsedTime;
-                    b.position.y += uy * b.speed.velocity * elapsedTime;
+                if(typeof b[name].angle === 'number' && typeof b[name].velocity === 'number') {
+                    b.position.x += Math.cos(b[name].angle) * b[name].velocity * elapsedTime;
+                    b.position.y += Math.sin(b[name].angle) * b[name].velocity * elapsedTime;
+                } else if (typeof b[name].velocity === 'number') {;
+                    let mag = Math.sqrt(b[name].x * b[name].x + b[name].y * b[name].y);
+                    let ux = b[name].x / mag;
+                    let uy = b[name].y / mag;
+                    b.position.x += ux * b[name].velocity * elapsedTime;
+                    b.position.y += uy * b[name].velocity * elapsedTime;
                 } else {
-                    b.position.x += b.speed.x * elapsedTime;
-                    b.position.y += b.speed.y * elapsedTime;
+                    b.position.x += b[name].x * elapsedTime;
+                    b.position.y += b[name].y * elapsedTime;
                 }
             }
         };
     }
 }
-
-/*
-var position = {x: 100, y: 100};
-var size = {w: 100, h: 100};
-var obj = fw.object.GameObject({position, size});
-var s = {x: .1, y: 0};
-obj.addBehavior(fw.object.behaviors.Speed(s));
-*/
-
 
 // let Rectangle = function({
 //     position: {
