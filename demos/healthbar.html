@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Simple Health Bar Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <canvas id='fw-canvas' width="1000" height="1000" style="width: 50%; background-color: blue;"></canvas>
+    
+    <script src="../fw/main.js"></script>
+    <script>
+        // You can change this in the dev tools to stop the game loop
+        var stop = false;
+        var obj;
+        document.addEventListener("DOMContentLoaded", function(event) {
+            // Initialize game object
+            obj = fw.object.GameObject({
+                position: {
+                    x: 25,
+                    y: 25
+                },
+                size: {
+                    w: 20,
+                    h: 20
+                }
+            });
+
+            // Add two speed vectors because why not?
+            obj.addBehavior(fw.object.behaviors.Speed({
+                x: .1,
+                y: 0,
+            }));
+            obj.addBehavior(fw.object.behaviors.Speed({
+                name: 'speed2',
+                x: 0,
+                y: .05,
+            }));
+
+            // Render the 'player' rectangle with a custom behavior
+            obj.addBehavior({
+                name: 'rectangle',
+                // obj.render() will call this render function, passing in obj as the first argument
+                // I am destructuring that obj parameter to get just the parts I care about
+                render({
+                    behaviors: {
+                        position: { x, y },
+                        size: { w, h }
+                    }
+                }) {
+                    fw.graphics.drawRectangle({ x, y, w, h });
+                }
+            });
+
+            // Render the health bar with a custom behavior.
+            // We would also want to keep track of current health, max health, etc.
+            obj.addBehavior({
+                name: 'health',
+                yoffset: -15,
+                w: 20,
+                h: 5,
+                // obj.render() will call this render function, passing in obj as the first argument
+                // I am destructuring that obj parameter to get just the parts I care about
+                render({
+                    behaviors: {
+                        position: { x, y },
+                        health: { yoffset, w, h }
+                    }
+                }) {
+                    fw.graphics.drawRectangle({ x, y: y + yoffset, w, h, fill: '#33dd00' });
+                }
+            });
+
+            function update(elapsedTime) {
+                // Make it stop before it gets away!
+                if(obj.behaviors.position.x > 800) {
+                    obj.behaviors.speed.x = 0;
+                    obj.behaviors.speed2.y = 0;
+                }
+
+                // Automatically updates both speed vectors
+                // And any other behavior on obj with an update function
+                obj.update(elapsedTime);
+            }
+
+            function render() {
+                fw.graphics.clear();
+
+                // Automatically renders both the player rectangle and the health bar
+                // And any other behavior on obj with a render function
+                obj.render();
+            }
+
+            function gameLoop(time) {
+                
+                update(time - lastTimeStamp);
+                lastTimeStamp = time;
+                
+                render();
+                
+                if(!stop) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            var lastTimeStamp = performance.now();
+            gameLoop(lastTimeStamp);
+        });
+    </script>
+</body>
+</html>

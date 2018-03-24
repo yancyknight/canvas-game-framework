@@ -3,23 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Simple Health Bar Demo</title>
+    <title>Simple Collision Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <canvas id='fw-canvas' width="1000" height="1000" style="width: 50%; background-color: blue;"></canvas>
     
-    <script src="./main.js"></script>
+    <script src="../fw/main.js"></script>
     <script>
         // You can change this in the dev tools to stop the game loop
         var stop = false;
-        var obj;
+        var player, wall;
         document.addEventListener("DOMContentLoaded", function(event) {
-            // Initialize game object
-            obj = fw.object.GameObject({
+            // Initialize player object
+            player = fw.object.GameObject({
                 position: {
                     x: 25,
-                    y: 25
+                    y: 50
                 },
                 size: {
                     w: 20,
@@ -27,21 +27,16 @@
                 }
             });
 
-            // Add two speed vectors because why not?
-            obj.addBehavior(fw.object.behaviors.Speed({
+            // Add a speed vector
+            player.addBehavior(fw.object.behaviors.Speed({
                 x: .1,
                 y: 0,
             }));
-            obj.addBehavior(fw.object.behaviors.Speed({
-                name: 'speed2',
-                x: 0,
-                y: .05,
-            }));
 
             // Render the 'player' rectangle with a custom behavior
-            obj.addBehavior({
+            player.addBehavior({
                 name: 'rectangle',
-                // obj.render() will call this render function, passing in obj as the first argument
+                // player.render() will call this render function, passing in obj as the first argument
                 // I am destructuring that obj parameter to get just the parts I care about
                 render({
                     behaviors: {
@@ -53,43 +48,60 @@
                 }
             });
 
-            // Render the health bar with a custom behavior.
-            // We would also want to keep track of current health, max health, etc.
-            obj.addBehavior({
-                name: 'health',
-                yoffset: -15,
-                w: 20,
-                h: 5,
-                // obj.render() will call this render function, passing in obj as the first argument
+            player.addBehavior(fw.object.behaviors.Collision());
+
+            // Initialize wall object
+            wall = fw.object.GameObject({
+                position: {
+                    x: 240,
+                    y: 20
+                },
+                size: {
+                    w: 20,
+                    h: 100
+                }
+            });
+
+            // Render the 'wall' rectangle with a custom behavior
+            wall.addBehavior({
+                name: 'rectangle',
+                // wall.render() will call this render function, passing in obj as the first argument
                 // I am destructuring that obj parameter to get just the parts I care about
                 render({
                     behaviors: {
                         position: { x, y },
-                        health: { yoffset, w, h }
+                        size: { w, h }
                     }
                 }) {
-                    fw.graphics.drawRectangle({ x, y: y + yoffset, w, h, fill: '#33dd00' });
+                    fw.graphics.drawRectangle({ x, y, w, h, fill: 'rgb(0,255,0)' });
+                }
+            });
+
+            wall.addBehavior(fw.object.behaviors.Collision());
+
+            fw.collision.register({
+                obj1: player,
+                obj2: wall,
+                // destroys the collision handler when fired
+                once: true,
+                handler(player, wall) {
+                    console.log(`collision!!`);
+                    player.behaviors.speed.x = 0;
                 }
             });
 
             function update(elapsedTime) {
-                // Make it stop before it gets away!
-                if(obj.behaviors.position.x > 800) {
-                    obj.behaviors.speed.x = 0;
-                    obj.behaviors.speed2.y = 0;
-                }
-
-                // Automatically updates both speed vectors
-                // And any other behavior on obj with an update function
-                obj.update(elapsedTime);
+                player.update(elapsedTime);
+                wall.update(elapsedTime);
+                fw.collision.update();
             }
 
             function render() {
                 fw.graphics.clear();
 
-                // Automatically renders both the player rectangle and the health bar
-                // And any other behavior on obj with a render function
-                obj.render();
+                player.render();
+                wall.render();
+                fw.collision.drawBoundingBox();
             }
 
             function gameLoop(time) {

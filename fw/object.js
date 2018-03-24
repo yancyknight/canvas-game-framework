@@ -63,22 +63,29 @@ function GameObject({
 }
 
 let behaviors = {
-    // NEEDS WORK
-    Collidable() {
+    Collision() {
         return {
-            name: 'collidable',
-            getBoundingBoxgetBoundingBox() {
-                return {
-                    x: px,
-                    y: py,
-                    w,
-                    h
-                }
-            },
-        
-            drawBoundingBox() {
-                let bb = that.getBoundingBox();
-                graphics.drawRectangle({x: bb.x, y: bb.y, width: bb.w, height: bb.h, stroke: '#ff0000', fill: 'rgba(0,0,0,0)'});
+            name: 'collision',
+            getBoundingBox({
+                behaviors,
+                behaviors: {
+                    position: { x, y } = {},
+                    size: { w, h } = {}
+                } = {}
+            } = {}) {
+                if(typeof behaviors === 'undefined') throw 'behaviors.Collision.getBoundingBox: must pass a reference to the object'
+                // if (typeof object.radius === 'number') {
+                //     // assume we have a circle
+                //     return {
+                //         height: object.radius * 2,
+                //         width: object.radius * 2,
+                //         x: object.x - object.radius,
+                //         y: object.y - object.radius
+            
+                //     }
+                // } else {
+                return { x, y, w, h }
+                // }
             }
         }
     },
