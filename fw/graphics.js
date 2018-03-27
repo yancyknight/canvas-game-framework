@@ -69,41 +69,58 @@ function drawText({
 	context.restore();
 }
 
-// rotation broken
+function Img(src) {
+	return new Promise(function(resolve, reject) {
+		var img = new Image();
+		img.src = src;
+		img.onload = function() {
+			resolve(img);
+		}
+	});
+}
+
 function drawImage({
-	center: {
-		x,
-		y,
-	},
-	w,
-	h,
-	src,
+	image,
+	dx,
+	dy,
+	sx = 0,
+	sy = 0,
+	sWidth,
+	sHeight,
+	dWidth,
+	dHeight,
 	rotation = 0,
 } = {}) {
-	var image = new Image();
-	image.onload = draw;
+	var self = this;
+	image.then(function(img){
+		if (typeof sWidth === 'undefined') sWidth = img.naturalWidth;
+		if (typeof dWidth === 'undefined') dWidth = img.naturalWidth;
+		if (typeof sHeight === 'undefined') sHeight = img.naturalHeight;
+		if (typeof dHeight === 'undefined') dHeight = img.naturalHeight;
 
-	image.src = src;
-
-	function draw() {
-		context.save();
-		context.translate(x, y);
-		context.rotate(rotation);
-		context.translate(-x, -y);
-
-		if(w && h) {
-			context.drawImage(image, x - w / 2, y - h / 2, w, h);
-		} else {
-			context.drawImage(image, x - this.naturalWidth / 2, y - this.naturalHeight / 2);
+		var center = {
+			x: dx + (dWidth * .5),
+			y: dy + (dHeight * .5),
 		}
 
+		context.save();
+		context.translate(center.x, center.y);
+		context.rotate(rotation * (Math.PI / 180));
+		context.translate(-center.x, -center.y);
+
+
+		context.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+	
 		context.restore();
-	}
+	})
 }
 
 module.exports = {
 	clear,
+	canvas,
+	context,
 	drawRectangle,
+	Img,
 	drawImage,
 	drawText,
 };
