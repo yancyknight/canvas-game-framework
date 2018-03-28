@@ -2,7 +2,15 @@
 const PERSISTANT = "PersistantSettings";
 
 function getSettings() {
-    return localStorage.getItem(PERSISTANT);
+    let settingsString = localStorage.getItem(PERSISTANT);
+    if (settingsString === null) {
+        console.log("setting settings");
+        return {};
+    }
+    else {
+        console.log("settings: " + settingsString);
+        return JSON.parse(settingsString);
+    }
 }
 
 function setSettings({
@@ -11,11 +19,16 @@ function setSettings({
 } = {}) {
     let settingsString = localStorage.getItem(PERSISTANT);
     if (settingsString === null) {
-        return;
+        console.log("setting settings");
+        var settings = {};
     }
-    settings = JSON.parse(settingsString);
+    else {
+        console.log("settings: " + settingsString);
+        var settings = JSON.parse(settingsString);
+    }
     settings[field] = value;
-    localStorage.setItem(PERSISTANT, settings);
+    localStorage.setItem(PERSISTANT, JSON.stringify(settings));
+    return settings;
 }
 
 function removeSetting(setting) {
@@ -23,9 +36,9 @@ function removeSetting(setting) {
     if (settingsString === null) {
         return;
     }
-    settings = JSON.parse(settingsString);
+    var settings = JSON.parse(settingsString);
     delete settings[setting];
-    localStorage.setItem(PERSISTANT, settings);
+    localStorage.setItem(PERSISTANT, JSON.stringify(settings));
 }
 
 function removeAllSettings() {
@@ -37,15 +50,5 @@ module.exports = {
     getSettings,
     setSettings,
     removeSetting,
-    removeAllScores
+    removeAllSettings
 };
-
-// console.log('Scores: ' + JSON.stringify(getScores()));
-// addScore("2");
-// addScore("9");
-// addScore("19");
-// addScore("91");
-// addScore("21");
-// console.log('Scores: ' + JSON.stringify(getScores()));
-// removeScore();
-// console.log('Scores: ' + JSON.stringify(getScores()));

@@ -37,13 +37,3 @@ module.exports = {
 	removeScore,
 };
 
-// console.log('Scores: ' + JSON.stringify(getScores()));
-// addScore("2");
-// addScore("9");
-// addScore("19");
-// addScore("91");
-// addScore("21");
-// console.log('Scores: ' + JSON.stringify(getScores()));
-// removeScore();
-
-// console.log('Scores: ' + JSON.stringify(getScores()));
