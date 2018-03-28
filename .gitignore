@@ -1,5 +1,9 @@
 .cache
 dist
 node_modules
+<<<<<<< HEAD
 package-lock.json
 .node-persist/*
+=======
+fw.code-workspace
+>>>>>>> yancy/master
