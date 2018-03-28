@@ -1,4 +1,6 @@
 .cache
 dist
 node_modules
+package-lock.json
+.node-persist/*
 fw.code-workspace
