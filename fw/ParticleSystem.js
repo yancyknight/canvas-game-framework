@@ -3,7 +3,7 @@
 
 function nextCircleVector(angleOffset, angleTotal) {
     //TODO: Some reason it is getting a bad angle every once and a while
-    var angle = (Math.random() * 2 * Math.PI) % angleTotal + angleOffset;
+    var angle = ((Math.random() * 2 * Math.PI) % angleTotal) + angleOffset;
     return {
         x: Math.cos(angle),
         y: Math.sin(angle)
@@ -49,7 +49,6 @@ function ParticleSystem({
     sizemean,
     sizestdev,
     fill = 'rgba(0, 0, 255, 0.5)',
-    radius,
     style,
     stroke,
     image,

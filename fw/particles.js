@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         fill: 'rgba(0, 255, 255, 0.75)',
         stroke: 'rgba(0, 255, 0, 0.5)',
         image: '../textures/fire.png',
-        rate: 1,
+        rate: 5,
         style: 'circle',
-        angleOffset: Math.PI/8*3,
-        angleTotal: Math.PI/4,
+        angleOffset: 0,
+        angleTotal: Math.PI/2,
 //        imagedHeight: 10,
 //        imagedWidth: 10
     });
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var elapsedTime = time - lastTimeStamp;
         lastTimeStamp = time;
         
-        console.log(elapsedTime);
+        // console.log(elapsedTime);
         clear();
         particleSystem.update(elapsedTime);
         particleSystem.render();
