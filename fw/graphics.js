@@ -23,14 +23,16 @@ function drawCircle({
 	fill = '#000000',
 	stroke = '#000000',
 } = {}) {
-    context.save();
+	context.save();
+	context.beginPath();
 
 	context.fillStyle = fill;
 	context.strokeStyle = stroke;
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
 
-    context.restore();
+	context.stroke();
+	context.restore();
 };
 
 function drawRectangle({
@@ -115,13 +117,13 @@ function drawImage({
 	})
 }
 
-module.exports = {
-	clear,
-	canvas,
-	context,
-	drawRectangle,
-	Img,
-	drawImage,
-	drawText,
-};
+//module.exports = {
+//	clear,
+//	canvas,
+//	context,
+//	drawRectangle,
+//	Img,
+//	drawImage,
+//	drawText,
+//};
 
