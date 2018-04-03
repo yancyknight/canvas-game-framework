@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-//    const fw = require('./main');
-    let manager = ParticleSystemManager();
+    const fw = require('./../fw/main');
+    let manager = fw.particles.ParticleSystemManager();
     let c = {x:300, y:300};
     manager.addParticleSystem(c, {
 		speedmean: .1, speedstdev: 0.04,
@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
         fill: 'rgba(0, 255, 255, 0.75)',
         stroke: 'rgba(0, 255, 0, 0.5)',
         image: '../textures/fire.png',
-//        rate: 5, // If rate is undefined, it will use amount
+        rate: 5, // If rate is undefined, it will use amount
         amount: 1000,
-        style: 'image',
+        style: 'circle',
         //angleOffset: Math.PI/8*3,
         //angleTotal: Math.PI/4,
         imagedHeight: 20,
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         lastTimeStamp = time;
         
         // console.log(elapsedTime);
-        clear();
+        fw.graphics.clear();
         manager.update(elapsedTime);
         manager.render();
         requestAnimationFrame(gameLoop);

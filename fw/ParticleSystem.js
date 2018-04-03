@@ -1,9 +1,8 @@
 'use strict';
-//const graphics = require('./graphics');
+const graphics = require('./graphics');
 var systems = [];
 
 function nextCircleVector(angleOffset, angleTotal) {
-    //TODO: Some reason it is getting a bad angle every once and a while
     var angle = ((Math.random() * 2 * Math.PI) % angleTotal) + angleOffset;
     return {
         x: Math.cos(angle),
@@ -67,13 +66,13 @@ function ParticleSystem(center, {
         toAdd = rate;
     }
     if (style === 'image') {
-        var iImage = Img(image);
+        var iImage = graphics.Img(image);
     }
     that.render = function () {
         for (let particle = 0; particle < particles.length; particle++) {
             if (particles[particle].alive >= 100) {
                 if (particles[particle].style === 'circle') {
-                    drawCircle({
+                    graphics.drawCircle({
                         x: particles[particle].particleCenter.x,
                         y: particles[particle].particleCenter.y,
                         radius: particles[particle].size,
@@ -81,7 +80,7 @@ function ParticleSystem(center, {
                         stroke: particles[particle].stroke
                     });
                 } else if (style == 'image') {
-                    drawImage({
+                    graphics.drawImage({
                         image: iImage,
                         dx: particles[particle].particleCenter.x,
                         dy: particles[particle].particleCenter.y,
@@ -186,7 +185,6 @@ function ParticleSystemManager() {
         }
         for(let i = toDelete.length-1; i >= 0; i--) {
             systems.splice(toDelete[i],1);
-            console.log('deleted');
         }
     }
 
@@ -200,8 +198,6 @@ function ParticleSystemManager() {
 
 }
 
-
-
-//module.exports = {
-//    ParticleSystemManager,
-//};
+module.exports = {
+    ParticleSystemManager,
+};

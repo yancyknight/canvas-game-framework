@@ -117,13 +117,14 @@ function drawImage({
 	})
 }
 
-//module.exports = {
-//	clear,
-//	canvas,
-//	context,
-//	drawRectangle,
-//	Img,
-//	drawImage,
-//	drawText,
-//};
+module.exports = {
+	clear,
+	canvas,
+	context,
+	drawRectangle,
+	Img,
+	drawImage,
+	drawText,
+	drawCircle,
+};
 
