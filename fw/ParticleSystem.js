@@ -1,5 +1,6 @@
 'use strict';
 //const graphics = require('./graphics');
+var systems = [];
 
 function nextCircleVector(angleOffset, angleTotal) {
     //TODO: Some reason it is getting a bad angle every once and a while
@@ -39,9 +40,7 @@ function nextGaussian(mean, stdDev) {
     return mean + y1 * stdDev;
 }
 
-function ParticleSystem({
-    centerx,
-    centery,
+function ParticleSystem(center, {
     speedmean,
     speedstdev,
     lifetimemean,
@@ -54,12 +53,19 @@ function ParticleSystem({
     image,
     imagedWidth,
     imagedHeight,
-    rate = 5,
+    rate,
+    amount,
     angleOffset = 0,
     angleTotal = 2 * Math.PI
 } = {}) {
     let that = {};
     let particles = [];
+    let toAdd;
+    if(rate === undefined) {
+        toAdd = amount;
+    } else {
+        toAdd = rate;
+    }
     if (style === 'image') {
         var iImage = Img(image);
     }
@@ -68,8 +74,8 @@ function ParticleSystem({
             if (particles[particle].alive >= 100) {
                 if (particles[particle].style === 'circle') {
                     drawCircle({
-                        x: particles[particle].center.x,
-                        y: particles[particle].center.y,
+                        x: particles[particle].particleCenter.x,
+                        y: particles[particle].particleCenter.y,
                         radius: particles[particle].size,
                         fill: particles[particle].fill,
                         stroke: particles[particle].stroke
@@ -77,8 +83,8 @@ function ParticleSystem({
                 } else if (style == 'image') {
                     drawImage({
                         image: iImage,
-                        dx: particles[particle].center.x,
-                        dy: particles[particle].center.y,
+                        dx: particles[particle].particleCenter.x,
+                        dy: particles[particle].particleCenter.y,
                         dWidth: imagedWidth,
                         dHeight: imagedHeight
                     })
@@ -91,9 +97,9 @@ function ParticleSystem({
         let keepMe = [];
 
         for (let particle = 0; particle < particles.length; particle++) {
-            particles[particle].alive += (elapsedTime / 2);
-            particles[particle].center.x += (elapsedTime * particles[particle].speed * particles[particle].direction.x);
-            particles[particle].center.y += (elapsedTime * particles[particle].speed * particles[particle].direction.y);
+            particles[particle].alive += elapsedTime;
+            particles[particle].particleCenter.x += (elapsedTime * particles[particle].speed * particles[particle].direction.x);
+            particles[particle].particleCenter.y += (elapsedTime * particles[particle].speed * particles[particle].direction.y);
             particles[particle].rotation += particles[particle].speed / .5;
 
             if (particles[particle].alive <= particles[particle].lifetime) {
@@ -101,14 +107,14 @@ function ParticleSystem({
             }
         }
 
-        for (let particle = 0; particle < rate; particle++) {
+        for (let particle = 0; particle < toAdd; particle++) {
             let p = {
-                center: {
-                    x: centerx,
-                    y: centery
+                particleCenter: {
+                    x: center.x,
+                    y: center.y
                 },
                 direction: nextCircleVector(angleOffset, angleTotal),
-                speed: nextGaussian(speedmean, speedstdev), // pixels per millisecond
+                speed: Math.abs(nextGaussian(speedmean, speedstdev)), // pixels per millisecond
                 rotation: 0,
                 lifetime: nextGaussian(lifetimemean, lifetimestdev), // milliseconds
                 alive: 0,
@@ -118,13 +124,84 @@ function ParticleSystem({
                 style: style
             };
             keepMe.push(p);
+            if(rate === undefined) {
+                toAdd--;
+            }
         }
         particles = keepMe;
+        if(particles.length === 0) {
+            return false;
+        }
     };
 
     return that;
 }
 
+function ParticleSystemManager() {
+    let that = {};
+    that.addParticleSystem = function (center, {
+    speedmean,
+    speedstdev,
+    lifetimemean,
+    lifetimestdev,
+    sizemean,
+    sizestdev,
+    fill = 'rgba(0, 0, 255, 0.5)',
+    style,
+    stroke,
+    image,
+    imagedWidth,
+    imagedHeight,
+    rate,
+    amount,
+    angleOffset = 0,
+    angleTotal = 2 * Math.PI
+} = {}) {
+    var system = ParticleSystem(center, {
+        speedmean,
+        speedstdev,
+        lifetimemean,
+        lifetimestdev,
+        sizemean,
+        sizestdev,
+        fill,
+        style,
+        stroke,
+        image,
+        imagedWidth,
+        imagedHeight,
+        rate,
+        amount,
+        angleOffset,
+        angleTotal});
+    systems.push(system);
+    }
+
+    that.update = function(elapsedTime) {
+        var toDelete = [];
+        for(let i = 0; i < systems.length; i++) {
+            if(systems[i].update(elapsedTime) === false) {
+                toDelete.push(i);
+            }
+        }
+        for(let i = toDelete.length-1; i >= 0; i--) {
+            systems.splice(toDelete[i],1);
+            console.log('deleted');
+        }
+    }
+
+    that.render = function() {
+        for(let i = 0; i < systems.length; i++) {
+            systems[i].render();
+        }
+    }
+
+    return that;
+
+}
+
+
+
 //module.exports = {
-//    ParticleSystem,
+//    ParticleSystemManager,
 //};
