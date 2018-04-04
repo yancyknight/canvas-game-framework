@@ -156,24 +156,24 @@ function ParticleSystemManager() {
     angleOffset = 0,
     angleTotal = 2 * Math.PI
 } = {}) {
-    var system = ParticleSystem(center, {
-        speedmean,
-        speedstdev,
-        lifetimemean,
-        lifetimestdev,
-        sizemean,
-        sizestdev,
-        fill,
-        style,
-        stroke,
-        image,
-        imagedWidth,
-        imagedHeight,
-        rate,
-        amount,
-        angleOffset,
-        angleTotal});
-    systems.push(system);
+        var system = ParticleSystem(center, {
+            speedmean,
+            speedstdev,
+            lifetimemean,
+            lifetimestdev,
+            sizemean,
+            sizestdev,
+            fill,
+            style,
+            stroke,
+            image,
+            imagedWidth,
+            imagedHeight,
+            rate,
+            amount,
+            angleOffset,
+            angleTotal});
+        systems.push(system);
     }
 
     that.update = function(elapsedTime) {
