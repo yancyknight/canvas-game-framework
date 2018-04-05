@@ -7,13 +7,14 @@ function GameObject({
     } = {},
     size: {
         w = 0,
-        h = 0
+        h = 0,
+        radius = 0
     } = {},
 } = {}) {
     let that = {
         behaviors: {
             position: { x, y },
-            size: { w, h }
+            size: { w, h, radius }
         }
     };
     let updateList = [];
