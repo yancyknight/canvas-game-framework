@@ -13,7 +13,7 @@
     <script>
         // You can change this in the dev tools to stop the game loop
         var stop = false;
-        var player, wall;
+        var player, wall, border;
         document.addEventListener("DOMContentLoaded", function(event) {
             // Initialize player object
             player = fw.object.GameObject({
@@ -22,8 +22,7 @@
                     y: 50
                 },
                 size: {
-                    w: 20,
-                    h: 20
+                    radius: 10
                 }
             });
 
@@ -35,16 +34,16 @@
 
             // Render the 'player' rectangle with a custom behavior
             player.addBehavior({
-                name: 'rectangle',
+                name: 'circle',
                 // player.render() will call this render function, passing in obj as the first argument
                 // I am destructuring that obj parameter to get just the parts I care about
                 render({
                     behaviors: {
                         position: { x, y },
-                        size: { w, h }
+                        size: { radius }
                     }
                 }) {
-                    fw.graphics.drawRectangle({ x, y, w, h });
+                    fw.graphics.drawCircle({ x, y, radius });
                 }
             });
 
@@ -79,14 +78,54 @@
 
             wall.addBehavior(fw.object.behaviors.Collision());
 
+			// Initialize border object
+            border = fw.object.GameObject({
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                size: {
+                    w: 1,
+                    h: 200
+                }
+            });
+
+            // Render the 'border' rectangle with a custom behavior
+            border.addBehavior({
+                name: 'rectangle',
+                // border.render() will call this render function, passing in obj as the first argument
+                // I am destructuring that obj parameter to get just the parts I care about
+                render({
+                    behaviors: {
+                        position: { x, y },
+                        size: { w, h }
+                    }
+                }) {
+                    fw.graphics.drawRectangle({ x, y, w, h, fill: 'rgb(0,255,0)' });
+                }
+            });
+
+            border.addBehavior(fw.object.behaviors.Collision());
+			
             fw.collision.register({
                 obj1: player,
                 obj2: wall,
                 // destroys the collision handler when fired
-                once: true,
+                once: false,
                 handler(player, wall) {
                     console.log(`collision!!`);
-                    player.behaviors.speed.x = 0;
+                    player.behaviors.speed.x *= -1;
+                }
+            });
+			
+			fw.collision.register({
+                obj1: player,
+                obj2: border,
+                // destroys the collision handler when fired
+                once: false,
+                handler(player, border) {
+                    console.log(`collision!!`);
+                    player.behaviors.speed.x *= -1;
                 }
             });
 

@@ -57,18 +57,23 @@ collision.update = function() {
 
         if (l1.x > r2.x || l2.x > r1.x) {
             handler.colliding = false;
-            return;
+            continue;
         }
 
         if (l1.y > r2.y || l2.y > r1.y) {
             handler.colliding = false;
-            return;
+            continue;
+        }
+
+        if(handler.colliding) {
+            continue;
         }
 
         handler.colliding = true;
         handler.handler(handler.obj1, handler.obj2);
-        if (handler.once) {
+        if (handler.once === true) {
             registeredHandlers.splice(i, 1);
+            i--;
         }
     }
 }
